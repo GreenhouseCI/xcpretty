@@ -339,7 +339,24 @@ module XCPretty
       when GENERIC_WARNING_MATCHER
         formatter.format_warning($1)
       else
-        ""
+        ignore_lines = [
+          /^\s*export/,
+          /^\s*builtin-/,
+          /^\s*write-file/,
+          /^CompileStoryboard/,
+          /^CompileAssetCatalog/,
+          /^\/\*.*\*\//,
+          /^\/bin\/mkdir/,
+          /^Test Suite/,
+          /^Test Case/,
+          /^\s?\*\* .* \*\*/
+        ]
+        ignore_lines.each do |regex|
+          if text =~ regex
+            return ""
+          end
+        end
+        text.strip
       end
     end
 
