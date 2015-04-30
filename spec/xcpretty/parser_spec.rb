@@ -23,9 +23,32 @@ module XCPretty
       @parser.parse(SAMPLE_ANALYZE_SHALLOW)
     end
 
+    it 'parses build failed message' do
+      @formatter.should receive(:format_stage_complete).with('BUILD', 'FAILED')
+      @parser.parse('** BUILD FAILED **')
+    end
+
+    it 'parses build succeeded message' do
+      @formatter.should receive(:format_stage_complete).with(
+        'BUILD',
+        'SUCCEEDED')
+      @parser.parse('** BUILD SUCCEEDED **')
+    end
+
     it "parses build target" do
       @formatter.should receive(:format_build_target).with("The Spacer", "Pods", "Debug")
       @parser.parse(SAMPLE_BUILD)
+    end
+
+    it 'parses clean failed message' do
+      @formatter.should receive(:format_stage_complete).with('CLEAN', 'FAILED')
+      @parser.parse('** CLEAN FAILED **')
+    end
+
+    it 'parses clean succeeded message' do
+      @formatter.should receive(:format_stage_complete).with(
+        'CLEAN', 'SUCCEEDED')
+      @parser.parse('** CLEAN SUCCEEDED **')
     end
 
     it "parses clean remove" do
@@ -107,9 +130,9 @@ module XCPretty
       @parser.parse(SAMPLE_COPYSTRINGS)
     end
 
-    it "parses CpHeader" do
+    it 'parses CpHeader' do
       @formatter.should receive(:format_copy_header_file).with(
-        '/path/to/Header.h','/some other/path/Header.h')
+        '/path/to/Header.h', '/some other/path/Header.h')
       @parser.parse('CpHeader /path/to/Header.h /some other/path/Header.h')
     end
 
@@ -136,6 +159,12 @@ module XCPretty
     it "parses Libtool" do
       @formatter.should receive(:format_libtool).with('libPods-ObjectiveSugarTests-Kiwi.a')
       @parser.parse(SAMPLE_LIBTOOL)
+    end
+
+    it 'parses mkdir invocations' do
+      @formatter.should receive(:format_shell_command).with(
+        '/bin/mkdir', '-p build/some stuff/here')
+      @parser.parse('/bin/mkdir -p build/some stuff/here')
     end
 
     it "parses specta failing tests" do
@@ -210,15 +239,32 @@ module XCPretty
     end
 
     it 'parses changing directories' do
-      @formatter.should receive(:format_shell_command).with('cd',
+      @formatter.should receive(:format_shell_command).with(
+        'cd',
         '/some/place/out\ there')
       @parser.parse('    cd /some/place/out\ there')
     end
 
-    it 'parses any indented command' do
+    it 'parses any indented command in a bin dir' do
       @formatter.should receive(:format_shell_command).with(
         '/bin/rm', '-rf /bin /usr /Users')
       @parser.parse('    /bin/rm -rf /bin /usr /Users')
+    end
+
+    it 'does not filter an indented path not in a bin dir' do
+      @formatter.should_not receive(:format_shell_command)
+      @parser.parse('    /some/path/to/a/file -flags arg1 arg2')
+    end
+
+    it 'parses test failed message' do
+      @formatter.should receive(:format_stage_complete).with('TEST', 'FAILED')
+      @parser.parse('** TEST FAILED **')
+    end
+
+    it 'parses test succeeded message' do
+      @formatter.should receive(:format_stage_complete).with(
+        'TEST', 'SUCCEEDED')
+      @parser.parse('** TEST SUCCEEDED **')
     end
 
     it "parses Touch" do
@@ -251,6 +297,17 @@ module XCPretty
       SAMPLE_UNDEFINED_SYMBOLS.each_line do |line|
         @parser.parse(line)
       end
+    end
+
+    it 'parses unknown text patterns' do
+      text = 'This is just some text?'
+      @formatter.should receive(:format_other_output).with(text)
+      @parser.parse(text)
+    end
+
+    it 'parses whitespace-only lines' do
+      @formatter.should receive(:format_empty_line).with("\t\t  ")
+      @parser.parse("\t\t  ")
     end
 
     it "parses duplicate symbols" do

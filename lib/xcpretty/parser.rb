@@ -21,7 +21,8 @@ module XCPretty
     # @regex Captured groups
     # $1 command path
     # $2 arguments
-    SHELL_COMMAND_MATCHER = /^\s{4}(cd|setenv|(?:[\w\/:\\\s\-.]+?\/)?[\w\-]+)\s(.*)$/
+    SHELL_COMMAND_MATCHER =
+     /^(?:\s{4})?(cd|setenv|mkdir|(?:[\w\/:\\\s\-.]+?bin\/)[\w\-]+)\s(.*)$/
 
     # @regex Nothing returned here for now
     CLEAN_REMOVE_MATCHER = /^Clean.Remove/
@@ -73,6 +74,9 @@ module XCPretty
     CPRESOURCE_MATCHER = /^CpResource\s(.*)\s\//
 
     # @regex Captured groups
+    # $1 whitespace
+    EMPTY_LINE_MATCHER = /^([\n\s]+)$/
+
     #
     EXECUTED_MATCHER = /^\s*Executed/
 
@@ -139,6 +143,10 @@ module XCPretty
     PROCESS_INFO_PLIST_MATCHER = /^ProcessInfoPlistFile\s.*\.plist\s(.*\/+(.*\.plist))/
 
     # @regex Captured groups
+    # $1 stage
+    # $2 status
+    STAGE_COMPLETE_MATCHER = /\*\* (BUILD|CLEAN|TEST) (SUCCEEDED|FAILED) \*\*/
+
     # $1 = suite
     # $2 = time
     TESTS_RUN_COMPLETION_MATCHER = /^\s*Test Suite '(?:.*\/)?(.*[ox]ctest.*)' (finished|passed|failed) at (.*)/
@@ -286,6 +294,8 @@ module XCPretty
         formatter.format_copy_plist_file($1, $2)
       when CPRESOURCE_MATCHER
         formatter.format_cpresource($1)
+      when EMPTY_LINE_MATCHER
+        formatter.format_empty_line($1)
       when EXECUTED_MATCHER
         format_summary_if_needed(text)
       when FAILING_TEST_MATCHER
@@ -320,6 +330,8 @@ module XCPretty
         formatter.format_preprocess($1)
       when PBXCP_MATCHER
         formatter.format_pbxcp($1)
+      when STAGE_COMPLETE_MATCHER
+        formatter.format_stage_complete($1, $2)
       when TESTS_RUN_COMPLETION_MATCHER
         formatter.format_test_run_finished($1, $3)
       when TESTS_RUN_START_MATCHER
@@ -339,31 +351,7 @@ module XCPretty
       when GENERIC_WARNING_MATCHER
         formatter.format_warning($1)
       else
-        ignore_lines = [
-          /^\s?\*\* .* \*\*/,
-          /^\/\*.*\*\//,
-          /^\s*export/,
-          /^\s*builtin-/,
-          /^\s*write-file/,
-          /^\/bin\/mkdir/,
-          /^Test Suite/,
-          /^Test Case/,
-          /^CreateUniversalBinary/,
-          /^CopySwiftLibs/,
-          /^Copying/,
-          /^CpResource/,
-          /^CompileSwift/,
-          /^CompileStoryboard/,
-          /^CompileAssetCatalog/,
-          /^MergeSwift/,
-          /^Ditto/
-        ]
-        ignore_lines.each do |regex|
-          if text =~ regex
-            return ""
-          end
-        end
-        text.strip
+        formatter.format_other_output(text)
       end
     end
 

@@ -39,12 +39,12 @@ module XCPretty
       format("Compiling", file_name)
     end
 
-    def format_copy_header_file(source, target)
-      format("Copying", File.basename(source))
+    def format_copy_header_file(source, _)
+      format('Copying', File.basename(source))
     end
 
-    def format_copy_plist_file(source, target)
-      format("Copying", File.basename(source))
+    def format_copy_plist_file(source, _)
+      format('Copying', File.basename(source))
     end
 
     def format_copy_strings_file(file)
@@ -69,6 +69,34 @@ module XCPretty
 
     def format_failing_test(suite, test_case, reason, file)
       INDENT + format_test("#{test_case}, #{reason}", :fail)
+    end
+
+    def format_other_output(text)
+      ignore_lines = [
+          /^\s?\*\* .* \*\*/,
+          /^\/\*.*\*\//,
+          /^\s*export/,
+          /^\s*builtin-/,
+          /^\s*write-file/,
+          /^\/bin\/mkdir/,
+          /^Test Suite/,
+          /^Test Case/,
+          /^CreateUniversalBinary/,
+          /^CopySwiftLibs/,
+          /^Copying/,
+          /^CpResource/,
+          /^CompileSwift/,
+          /^CompileStoryboard/,
+          /^CompileAssetCatalog/,
+          /^MergeSwift/,
+          /^Ditto/
+      ]
+      ignore_lines.each do |regex|
+        if text =~ regex
+          return ""
+        end
+      end
+      text.strip
     end
 
     def format_passing_test(suite, test_case, time)

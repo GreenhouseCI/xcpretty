@@ -22,6 +22,7 @@ module XCPretty
     def format_copy_plist_file(source, target);               EMPTY; end
     def format_copy_strings_file(file_name);                  EMPTY; end
     def format_cpresource(file);                              EMPTY; end
+    def format_empty_line(text);                              EMPTY; end
     def format_generate_dsym(dsym);                           EMPTY; end
     def format_linking(file, build_variant, arch);            EMPTY; end
     def format_libtool(library);                              EMPTY; end
@@ -37,6 +38,7 @@ module XCPretty
     def format_preprocess(file);                              EMPTY; end
     def format_pbxcp(file);                                   EMPTY; end
     def format_shell_command(command, arguments);             EMPTY; end
+    def format_stage_complete(stage, state);                  EMPTY; end
     def format_test_run_started(name);                        EMPTY; end
     def format_test_run_finished(name, time);                 EMPTY; end
     def format_test_suite_started(name);                      EMPTY; end
@@ -53,11 +55,12 @@ module XCPretty
     def format_undefined_symbols(message, symbol, reference); EMPTY; end
     def format_duplicate_symbols(message, file_paths);        EMPTY; end
     def format_warning(message);                            message; end
-
     # TODO: see how we can unify format_error and format_compile_error,
     #       the same for warnings
     def format_compile_warning(file_name, file_path, reason,
                                line, cursor);                 EMPTY; end
+    # OTHER OUTPUT
+    def format_other_output(text);                            EMPTY; end
   end
 
   class Formatter
