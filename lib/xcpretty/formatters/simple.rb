@@ -72,6 +72,10 @@ module XCPretty
     end
 
     def format_other_output(text)
+      # Extra lines that we need to ignore
+      # Xcpretty used to ignore all lines that Parser did not match
+      # Since we're now printing them (to get proper error messages, etc),
+      # we need to explicitly ignore some lines that are not needed
       ignore_lines = [
           /^\s?\*\* .* \*\*/,
           /^\/\*.*\*\//,
