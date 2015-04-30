@@ -340,20 +340,21 @@ module XCPretty
         formatter.format_warning($1)
       else
         ignore_lines = [
+          /^\s?\*\* .* \*\*/,
+          /^\/\*.*\*\//,
           /^\s*export/,
           /^\s*builtin-/,
           /^\s*write-file/,
-          /^CompileStoryboard/,
-          /^CompileAssetCatalog/,
-          /^\/\*.*\*\//,
           /^\/bin\/mkdir/,
           /^Test Suite/,
           /^Test Case/,
-          /^\s?\*\* .* \*\*/,
           /^CreateUniversalBinary/,
           /^CopySwiftLibs/,
           /^Copying/,
+          /^CpResource/,
           /^CompileSwift/,
+          /^CompileStoryboard/,
+          /^CompileAssetCatalog/,
           /^MergeSwift/,
           /^Ditto/
         ]
