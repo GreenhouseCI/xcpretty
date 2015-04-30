@@ -96,6 +96,7 @@ module XCPretty
           return ""
         end
       end
+      # puts "#{self} OTHER OUTPUT: #{text}"
       text.strip
     end
 

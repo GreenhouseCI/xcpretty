@@ -76,9 +76,12 @@ end
 printer = XCPretty::Printer.new(printer_opts)
 reporters = report_classes.compact.each_with_index.map {|k,i| k.new(report_options[i])}
 
+
 STDIN.each_line do |line|
+  # puts "\n== LINE START '#{line.strip}' =="
   printer.pretty_print(line)
   reporters.each { |r| r.handle(line) }
+  # puts "== LINE END ==\n"
 end
 
 reporters.each(&:finish)
