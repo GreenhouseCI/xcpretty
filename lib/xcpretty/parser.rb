@@ -349,7 +349,13 @@ module XCPretty
           /^\/bin\/mkdir/,
           /^Test Suite/,
           /^Test Case/,
-          /^\s?\*\* .* \*\*/
+          /^\s?\*\* .* \*\*/,
+          /^CreateUniversalBinary/,
+          /^CopySwiftLibs/,
+          /^Copying/,
+          /^CompileSwift/,
+          /^MergeSwift/,
+          /^Ditto/
         ]
         ignore_lines.each do |regex|
           if text =~ regex
