@@ -77,8 +77,14 @@ module XCPretty
       # Since we're now printing them (to get proper error messages, etc),
       # we need to explicitly ignore some lines that are not needed
       ignore_lines = [
+          # /^/,
           /^\s?\*\* .* \*\*/,
           /^\/\*.*\*\//,
+          /^Build settings from command line:/,
+          /^CODE_SIGN_IDENTITY = /,
+          /^SDKROOT = /,
+          /^SYMROOT = /,
+          /^Create product structure = /,
           /^\s*export/,
           /^\s*builtin-/,
           /^\s*write-file/,
@@ -93,7 +99,6 @@ module XCPretty
           /^Copying/,
           /^CopyPNGFile/,
           /^CpResource/,
-          /^CompileC/,
           /^CompileSwift/,
           /^CompileStoryboard/,
           /^CompileAssetCatalog/,
