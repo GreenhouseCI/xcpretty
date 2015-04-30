@@ -256,27 +256,6 @@ module XCPretty
       update_error_state(text)
       update_linker_failure_state(text)
 
-      # if should_format_error?
-      #   puts "#{formatter} FORMAT ERROR: #{text}"
-      #   return format_compile_error
-      # end
-      #
-      # if should_format_warning?
-      #   puts "#{formatter} FORMAT WARNING #{text}"
-      #   return format_compile_warning
-      # end
-      #
-      # if should_format_undefined_symbols?
-      #   puts "#{formatter} FORMAT UNDEFINED SYMBOLS #{text}"
-      #   return format_undefined_symbols
-      # end
-      #
-      # if should_format_duplicate_symbols?
-      #   puts "#{formatter} FORMAT DUPLICATE SYMBOLS #{text}"
-      #   return format_duplicate_symbols
-      # end
-
-
       return format_compile_error if should_format_error?
       return format_compile_warning if should_format_warning?
       return format_undefined_symbols if should_format_undefined_symbols?
@@ -372,10 +351,6 @@ module XCPretty
       when GENERIC_WARNING_MATCHER
         formatter.format_warning($1)
       else
-        # puts "#{formatter} FORMATTING ERROR BOOL #{@formatting_error}"
-        # puts "#{formatter} FORMATTING WARNING BOOL #{@formatting_warning}"
-        # puts "#{formatter} CURRENT ISSUE #{current_issue}"
-
         return "" if @formatting_warning || @formatting_error || current_issue[:cursor]
         formatter.format_other_output(text)
       end
