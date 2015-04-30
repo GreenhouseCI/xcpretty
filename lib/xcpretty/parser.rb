@@ -351,12 +351,20 @@ module XCPretty
       when GENERIC_WARNING_MATCHER
         formatter.format_warning($1)
       else
-        return "" if @formatting_warning || @formatting_error || current_issue[:cursor]
+        return "" if should_format_other_output?
         formatter.format_other_output(text)
       end
     end
 
     private
+
+    # @formatting_warning or @formatting_error are true when we're in the process
+    # of appending lines to current_issue
+    # If current_issue[:cursor] has a value, then the booleans are false,
+    # but we're still reading the warning/error output
+    def should_format_other_output?
+      @formatting_warning || @formatting_error || current_issue[:cursor]
+    end
 
     def update_test_state(text)
       case text
