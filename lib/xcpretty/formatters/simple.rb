@@ -76,18 +76,19 @@ module XCPretty
       # Xcpretty used to ignore all lines that Parser did not match
       # Since we're now printing them (to get proper error messages, etc),
       # we need to explicitly ignore some lines that are not needed
+      our_text = text.strip
       ignore_lines = [
           # /^/,
-          /^\s?\*\* .* \*\*/,
+          /^\*\* .* \*\*/,
           /^\/\*.*\*\//,
           /^Build settings from command line:/,
-          /^CODE_SIGN_IDENTITY = /,
-          /^SDKROOT = /,
-          /^SYMROOT = /,
-          /^Create product structure = /,
-          /^\s*export/,
-          /^\s*builtin-/,
-          /^\s*write-file/,
+          /^CODE_SIGN_IDENTITY/,
+          /^SDKROOT/,
+          /^SYMROOT/,
+          /^Create product structure/,
+          /^export/,
+          /^builtin-/,
+          /^write-file/,
           /^\/bin\/mkdir/,
           /^Ld/,
           /^Test Suite/,
@@ -102,15 +103,16 @@ module XCPretty
           /^CompileSwift/,
           /^CompileStoryboard/,
           /^CompileAssetCatalog/,
+          /^CompileDTraceScript/,
           /^MergeSwift/,
           /^Ditto/
       ]
       ignore_lines.each do |regex|
-        if text =~ regex
+        if our_text =~ regex
           return ""
         end
       end
-      text.strip
+      our_text
     end
 
     def format_passing_test(suite, test_case, time)
