@@ -360,10 +360,8 @@ module XCPretty
 
     # @formatting_warning or @formatting_error are true when we're in the process
     # of appending lines to current_issue
-    # If current_issue[:cursor] has a value, then the booleans are false,
-    # but we're still reading the warning/error output
     def should_skip_other_output?
-      @formatting_warning || @formatting_error || current_issue[:cursor]
+      @formatting_warning || @formatting_error
     end
 
     def update_test_state(text)
